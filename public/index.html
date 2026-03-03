@@ -11,113 +11,96 @@
     --bg: #0a0a0f; --surface: #111118; --card: #16161f;
     --border: rgba(255,255,255,0.07); --accent: #00e5ff;
     --green: #22c55e; --red: #ef4444; --yellow: #f59e0b;
-    --purple: #7c3aed; --text: #e8e8f0; --muted: #6b7280; --white: #fff;
+    --text: #e8e8f0; --muted: #6b7280; --white: #fff;
   }
+  * { box-sizing: border-box; }
   body { font-family: 'Epilogue', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
   body::before {
     content: ''; position: fixed; inset: 0;
-    background-image: linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
     background-size: 44px 44px; pointer-events: none; z-index: 0;
   }
-
-  nav {
-    background: rgba(17,17,24,0.9); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border); padding: 0 24px;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 56px; position: sticky; top: 0; z-index: 50;
-  }
-  .nav-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--white); display: flex; align-items: center; gap: 8px; }
+  nav { background: rgba(17,17,24,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 50; }
+  .nav-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--white); }
   .nav-brand span { color: var(--accent); }
   .nav-tabs { display: flex; gap: 4px; }
   .nav-tab { padding: 7px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; font-family: 'Epilogue', sans-serif; transition: all 0.2s; background: transparent; color: var(--muted); }
   .nav-tab.active { background: rgba(0,229,255,0.1); color: var(--accent); }
   .nav-tab:hover:not(.active) { color: var(--text); }
-
   .page { display: none; } .page.active { display: block; }
   .container { max-width: 920px; margin: 0 auto; padding: 36px 20px; position: relative; z-index: 1; }
-
   .page-header { text-align: center; margin-bottom: 36px; }
   .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); padding: 5px 13px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px; }
   h1 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: var(--white); letter-spacing: -1px; line-height: 1.1; }
   h1 span { color: var(--accent); }
   .page-header p { color: var(--muted); font-size: 0.92rem; margin-top: 10px; }
-
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 18px; }
   .card-title { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--white); margin-bottom: 16px; }
-
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
   @media(max-width:580px) { .form-grid { grid-template-columns: 1fr; } }
   label { display: block; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
   select, input[type=text] { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; color: var(--text); font-family: 'Epilogue', sans-serif; font-size: 0.875rem; outline: none; transition: border-color 0.2s; }
   select:focus, input[type=text]:focus { border-color: var(--accent); }
   input[type=text]::placeholder { color: var(--muted); }
-
   .btn-primary { width: 100%; background: var(--accent); color: var(--bg); border: none; border-radius: 8px; padding: 13px; font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 7px; }
   .btn-primary:hover { background: #00c8e0; transform: translateY(-1px); }
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
   .error { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 8px; padding: 14px 16px; color: #ef4444; font-size: 0.85rem; margin-bottom: 16px; white-space: pre-wrap; line-height: 1.6; }
-
+  .info-banner { background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.15); border-radius: 8px; padding: 12px 16px; color: #a0d4db; font-size: 0.8rem; margin-bottom: 16px; line-height: 1.5; }
   .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 40px auto 12px; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading { text-align: center; color: var(--muted); padding: 16px; }
-
+  .loading p { margin-top: 8px; font-size: 0.85rem; }
+  .loading small { color: #4b5563; font-size: 0.75rem; }
   .stats-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
   .stat-pill { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 5px 13px; font-size: 0.76rem; font-weight: 500; display: flex; align-items: center; gap: 5px; }
   .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .dot-g { background: var(--green); } .dot-y { background: var(--yellow); } .dot-b { background: var(--accent); }
-
   .rh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
   .rh-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--white); }
   .btn-small { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 7px 13px; border-radius: 6px; font-size: 0.74rem; font-weight: 600; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: all 0.2s; }
   .btn-small:hover { border-color: var(--accent); color: var(--accent); }
-
   .results-grid { display: flex; flex-direction: column; gap: 12px; }
   .biz-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; transition: border-color 0.2s, transform 0.2s; position: relative; overflow: hidden; animation: fadeUp 0.35s ease both; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .biz-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); opacity: 0; transition: opacity 0.2s; }
   .biz-card:hover { border-color: rgba(0,229,255,0.2); transform: translateX(3px); }
   .biz-card:hover::before { opacity: 1; }
-
   .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
   .biz-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--white); margin-bottom: 3px; }
   .biz-addr { font-size: 0.75rem; color: var(--muted); }
   .biz-phone { font-size: 0.75rem; color: var(--accent); margin-top: 2px; }
-
   .score-badge { flex-shrink: 0; padding: 4px 10px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
   .hot { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
   .warm { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
   .cold { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.2); }
-
   .card-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
   .meta-item { font-size: 0.74rem; color: var(--muted); }
   .meta-item.warn { color: #ef4444; }
-
   .signals { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
   .sig { padding: 2px 9px; border-radius: 10px; font-size: 0.68rem; font-weight: 600; }
   .sig-good { background: rgba(34,197,94,0.1); color: var(--green); }
   .sig-bad { background: rgba(239,68,68,0.1); color: #ef4444; }
   .sig-neutral { background: rgba(107,114,128,0.1); color: #9ca3af; }
 
-  /* Social media row */
-  .social-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-  .social-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
-  .social-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 6px; font-size: 0.73rem; font-weight: 600; text-decoration: none; transition: all 0.15s; border: none; cursor: pointer; font-family: 'Epilogue', sans-serif; }
+  /* Social section */
+  .social-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+  .social-section-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .social-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .social-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 7px; font-size: 0.75rem; font-weight: 600; text-decoration: none; transition: all 0.15s; cursor: pointer; font-family: 'Epilogue', sans-serif; border: none; }
   .social-fb { background: rgba(24,119,242,0.15); color: #4e9ff5; border: 1px solid rgba(24,119,242,0.3); }
-  .social-fb:hover { background: rgba(24,119,242,0.25); }
+  .social-fb:hover { background: rgba(24,119,242,0.28); }
   .social-ig { background: rgba(225,48,108,0.12); color: #e1306c; border: 1px solid rgba(225,48,108,0.25); }
   .social-ig:hover { background: rgba(225,48,108,0.22); }
+  .social-note { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+  .social-note strong { color: #9ca3af; }
 
-  /* Legality panel */
-  .legal-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
-  .legal-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .legal-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 5px; font-size: 0.75rem; line-height: 1.5; }
+  /* Legal section */
+  .legal-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+  .legal-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .legal-row { display: flex; gap: 8px; margin-bottom: 6px; font-size: 0.76rem; line-height: 1.5; color: #9ca3af; }
   .legal-row:last-child { margin-bottom: 0; }
-  .legal-icon { flex-shrink: 0; width: 16px; text-align: center; margin-top: 1px; }
-  .legal-ok { color: var(--green); }
-  .legal-warn { color: var(--yellow); }
-  .legal-no { color: #ef4444; }
+  .legal-row .icon { flex-shrink: 0; width: 18px; }
 
   .card-actions { display: flex; gap: 7px; flex-wrap: wrap; }
   .act-btn { padding: 6px 13px; border-radius: 6px; font-size: 0.73rem; font-weight: 600; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: all 0.15s; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
@@ -140,7 +123,6 @@
   .notes-input::placeholder { color: var(--muted); }
   .del-btn { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; padding: 5px 10px; font-size: 0.72rem; cursor: pointer; font-family: 'Epilogue', sans-serif; }
   .del-btn:hover { background: rgba(239,68,68,0.2); }
-
   .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
   .empty .icon { font-size: 2.5rem; margin-bottom: 12px; }
   .empty h3 { font-family: 'Syne', sans-serif; color: var(--text); margin-bottom: 6px; font-size: 1rem; }
@@ -158,8 +140,6 @@
   .close-modal { background: var(--surface); color: var(--muted); border: 1px solid var(--border); border-radius: 8px; padding: 11px 16px; font-family: 'Epilogue', sans-serif; font-size: 0.83rem; cursor: pointer; }
   .save-btn { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); border-radius: 8px; padding: 11px 16px; font-family: 'Epilogue', sans-serif; font-size: 0.83rem; cursor: pointer; font-weight: 600; }
   .save-btn:hover { background: rgba(34,197,94,0.2); }
-
-  .section-divider { height: 1px; background: var(--border); margin: 14px 0; }
 </style>
 </head>
 <body>
@@ -172,13 +152,12 @@
   </div>
 </nav>
 
-<!-- SEARCH PAGE -->
 <div class="page active" id="page-search">
   <div class="container">
     <div class="page-header">
       <div class="badge">🎯 Chatbot Lead Finder</div>
       <h1>Find Your Next<br><span>Chatbot Client</span></h1>
-      <p>Real businesses from Google Maps — scored, social links found, outreach ready</p>
+      <p>Searches surrounding areas automatically — hottest leads shown first</p>
     </div>
 
     <div class="card">
@@ -210,7 +189,13 @@
     </div>
 
     <div class="error" id="errorBox" style="display:none"></div>
-    <div id="loadingDiv" style="display:none"><div class="loading"><div class="spinner"></div><p>Searching Google Maps...</p></div></div>
+    <div id="loadingDiv" style="display:none">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Searching multiple areas for leads...</p>
+        <small>This takes 10-20 seconds — searching surrounding towns too</small>
+      </div>
+    </div>
     <div id="emptyDiv" style="display:none"><div class="empty"><div class="icon">🗺️</div><h3>No results found</h3><p>Try a different industry or location</p></div></div>
 
     <div id="resultsSection" style="display:none">
@@ -224,19 +209,17 @@
   </div>
 </div>
 
-<!-- SAVED LEADS PAGE -->
 <div class="page" id="page-saved">
   <div class="container">
     <div class="page-header">
       <div class="badge">💾 Pipeline</div>
       <h1>Your <span>Saved Leads</span></h1>
-      <p>Track your outreach — mark status and add notes per business</p>
+      <p>Track your outreach — update status and add notes per business</p>
     </div>
     <div id="leadsContainer"></div>
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="overlay" id="modal" style="display:none" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h3 id="mTitle"></h3>
@@ -269,30 +252,6 @@ const pains = {
   vet: 'missing urgent enquiries from worried pet owners outside opening hours'
 };
 
-// ── Legality rules per channel ─────────────────────────────────
-const legalityInfo = {
-  facebook_dm: {
-    icon: '⚠️', cls: 'legal-warn',
-    text: "Facebook DMs to business pages: <strong>generally fine</strong> as it's B2B cold outreach. You're messaging the business, not a private individual. Keep it professional and relevant. No explicit UK law bans this, but don't spam."
-  },
-  facebook_comment: {
-    icon: '✅', cls: 'legal-ok',
-    text: "Commenting on their public Facebook posts is <strong>fully legal</strong> — it's public engagement. Just be helpful, not spammy. A genuine comment that leads to a DM conversation works well."
-  },
-  email: {
-    icon: '⚠️', cls: 'legal-warn',
-    text: "Cold email to a business is legal under UK PECR rules <strong>if</strong> the email is publicly listed and your message is relevant to their business. Always include your name and a way to opt out. Don't send bulk blasts."
-  },
-  phone: {
-    icon: '✅', cls: 'legal-ok',
-    text: "Cold calling a business landline or number found on Google Maps is <strong>legal in the UK</strong>. Check the Corporate TPS (CTPS) register first — businesses can register to opt out of cold calls. Free to check at ctps.org.uk."
-  },
-  instagram: {
-    icon: '⚠️', cls: 'legal-warn',
-    text: "Instagram DMs to a business account: <strong>generally acceptable</strong> for B2B outreach. Keep it short and personalised. Avoid mass DMing — Instagram may restrict your account."
-  }
-};
-
 function switchPage(page, e) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -305,12 +264,10 @@ async function doSearch() {
   const industry = document.getElementById('industry').value;
   const location = document.getElementById('location').value.trim();
   if (!location) { showErr('Please enter a location.'); return; }
-
   clearErr();
   setLoading(true);
   document.getElementById('resultsSection').style.display = 'none';
   document.getElementById('emptyDiv').style.display = 'none';
-
   try {
     const res = await fetch(`/api/search?industry=${encodeURIComponent(industry)}&location=${encodeURIComponent(location)}`);
     const data = await res.json();
@@ -318,26 +275,30 @@ async function doSearch() {
     if (!res.ok || data.error) { showErr(data.error || 'Search failed'); return; }
     if (!data.results || data.results.length === 0) { document.getElementById('emptyDiv').style.display = 'block'; return; }
     searchResults = data.results;
-    renderResults(industry, location);
+    renderResults(industry, location, data.areasSearched || [location]);
   } catch(e) {
     setLoading(false);
     showErr('Could not reach the server. Make sure it is running.');
   }
 }
 
-function renderResults(industry, location) {
+function renderResults(industry, location, areas) {
   const grid = document.getElementById('resultsGrid');
   grid.innerHTML = '';
 
   const hot = searchResults.filter(r => r.leadScore === 'hot').length;
   const warm = searchResults.filter(r => r.leadScore === 'warm').length;
+  const cold = searchResults.filter(r => r.leadScore === 'cold').length;
+  const noWebsite = searchResults.filter(r => !r.hasWebsite).length;
 
   document.getElementById('statsBar').innerHTML = `
     <div class="stat-pill"><span class="dot dot-g"></span>${hot} Hot</div>
     <div class="stat-pill"><span class="dot dot-y"></span>${warm} Warm</div>
-    <div class="stat-pill"><span class="dot dot-b"></span>${searchResults.length} Total</div>`;
+    <div class="stat-pill"><span class="dot" style="background:#6b7280"></span>${cold} Cold</div>
+    <div class="stat-pill">⚠️ ${noWebsite} no website</div>
+    <div class="stat-pill">📍 ${areas.length} areas searched</div>`;
 
-  document.getElementById('resultsTitle').textContent = `${searchResults.length} ${industry}s near ${location}`;
+  document.getElementById('resultsTitle').textContent = `${searchResults.length} ${industry}s found — sorted by opportunity`;
   document.getElementById('resultsSection').style.display = 'block';
 
   const labels = { hot: '🔥 Hot Lead', warm: '⚡ Warm Lead', cold: '❄️ Cold Lead' };
@@ -345,35 +306,36 @@ function renderResults(industry, location) {
   searchResults.forEach((b, i) => {
     const card = document.createElement('div');
     card.className = 'biz-card';
-    card.style.animationDelay = `${i * 0.04}s`;
+    card.style.animationDelay = `${Math.min(i * 0.03, 0.5)}s`;
 
     const sigs = b.signals.map(s => `<span class="sig sig-${s.type}">${s.text}</span>`).join('');
-
-    // Social links section
     const sl = b.socialLinks || {};
+
+    // Social section - explain what each button does
     const socialHTML = `
-      <div class="social-row">
-        <span class="social-label">Find on:</span>
-        <a class="social-btn social-fb" href="${sl.facebookSearch}" target="_blank">𝗳 Search Facebook</a>
-        <a class="social-btn social-ig" href="${sl.instagramSearch || '#'}" target="_blank">📸 Try Instagram</a>
+      <div class="social-section">
+        <div class="social-section-title">📱 Find on Social Media</div>
+        <div class="social-row">
+          <a class="social-btn social-fb" href="${sl.facebookSearch}" target="_blank" rel="noopener">
+            𝗳 Search Facebook Pages
+          </a>
+          <a class="social-btn social-ig" href="${sl.instagramSearch}" target="_blank" rel="noopener">
+            📸 Search Instagram
+          </a>
+        </div>
+        <div class="social-note">
+          <strong>Facebook:</strong> Opens a Facebook search for their business page — find it and send a DM.<br>
+          <strong>Instagram:</strong> Searches Google for their Instagram — find the right account and DM them there.
+        </div>
       </div>`;
 
-    // Legality panel
+    // Legality
     const legalHTML = `
-      <div class="legal-panel">
+      <div class="legal-section">
         <div class="legal-title">⚖️ Is it legal to contact them?</div>
-        <div class="legal-row">
-          <span class="legal-icon">${legalityInfo.facebook_dm.icon}</span>
-          <span class="${legalityInfo.facebook_dm.cls}">${legalityInfo.facebook_dm.text}</span>
-        </div>
-        <div class="legal-row">
-          <span class="legal-icon">${legalityInfo.email.icon}</span>
-          <span class="${legalityInfo.email.cls}">${legalityInfo.email.text}</span>
-        </div>
-        <div class="legal-row">
-          <span class="legal-icon">${legalityInfo.phone.icon}</span>
-          <span class="${legalityInfo.phone.cls}">${legalityInfo.phone.text}</span>
-        </div>
+        <div class="legal-row"><span class="icon">✅</span><span><strong style="color:#e8e8f0">Facebook DM to their business page</strong> — Legal in the UK. You're messaging a business, not a private person. Keep it relevant and don't spam.</span></div>
+        <div class="legal-row"><span class="icon">✅</span><span><strong style="color:#e8e8f0">Calling their listed phone number</strong> — Legal. Check CTPS register (ctps.org.uk) first to be safe.</span></div>
+        <div class="legal-row"><span class="icon">⚠️</span><span><strong style="color:#e8e8f0">Cold email to their business address</strong> — Legal under UK PECR if the email is publicly listed and relevant. Always include your name and let them opt out.</span></div>
       </div>`;
 
     card.innerHTML = `
@@ -387,15 +349,15 @@ function renderResults(industry, location) {
       </div>
       <div class="card-meta">
         ${b.rating ? `<span class="meta-item">⭐ ${b.rating} (${b.reviews} reviews)</span>` : ''}
-        ${b.hasWebsite ? `<span class="meta-item">🌐 Has website</span>` : `<span class="meta-item warn">⚠️ No website</span>`}
+        ${b.hasWebsite ? `<span class="meta-item">🌐 Has website</span>` : `<span class="meta-item warn">⚠️ No website — prime target</span>`}
       </div>
       <div class="signals">${sigs}</div>
       ${socialHTML}
       ${legalHTML}
       <div class="card-actions">
         <button class="act-btn act-accent" onclick="openScript(${i})">✉️ Outreach Script</button>
-        <a class="act-btn act-purple" href="${b.googleMapsUrl}" target="_blank">📍 Maps</a>
-        ${b.hasWebsite ? `<a class="act-btn act-ghost" href="${b.website}" target="_blank">🌐 Website</a>` : ''}
+        <a class="act-btn act-purple" href="${b.googleMapsUrl}" target="_blank" rel="noopener">📍 Maps</a>
+        ${b.hasWebsite ? `<a class="act-btn act-ghost" href="${b.website}" target="_blank" rel="noopener">🌐 Website</a>` : ''}
         <button class="act-btn act-green" onclick="saveDirectly(${i}, this)">💾 Save Lead</button>
       </div>`;
     grid.appendChild(card);
@@ -407,12 +369,10 @@ function openScript(i) {
   const b = currentBiz;
   const pain = pains[b.industry] || 'missing customer enquiries outside business hours';
   const city = b.address.split(',').slice(-3,-1).join(',').trim() || 'the area';
-
   const script = b.hasWebsite
-    ? `Hi,\n\nI came across ${b.name} while looking at local ${b.industry}s in ${city} and noticed your website doesn't have a live chat or booking assistant.\n\nI build AI chatbots for local ${b.industry}s that handle customer enquiries, answer FAQs and capture leads automatically — 24/7, even outside business hours.\n\nA lot of ${b.industry}s I speak to are ${pain}.\n\nI've put together a free demo showing exactly what it could look like for ${b.name}. Takes 2 minutes to view and there's no obligation whatsoever.\n\nWould you be open to a quick look?\n\nBest,\n[Your name]\n[Your number]`
-    : `Hi,\n\nI found ${b.name} on Google Maps and wanted to reach out.\n\nI build AI chatbots for local ${b.industry}s that handle customer enquiries and capture leads automatically — 24/7, even when you're busy or closed.\n\nMost ${b.industry}s I work with are ${pain}.\n\nI've built a free demo for a ${b.industry} business — happy to show you what it would look like for ${b.name}, no strings attached.\n\nWould you be interested in a quick look?\n\nBest,\n[Your name]\n[Your number]`;
-
-  document.getElementById('mTitle').textContent = `Outreach — ${b.name}`;
+    ? `Hi,\n\nI came across ${b.name} while looking at local ${b.industry}s in ${city} and noticed your website doesn't have a live chat or booking assistant.\n\nI build AI chatbots for local ${b.industry}s that handle customer enquiries, answer FAQs and capture leads automatically — 24/7, even outside business hours.\n\nA lot of ${b.industry}s I speak to are ${pain}.\n\nI've built a free demo showing exactly what it could look like for ${b.name}. Takes 2 minutes to view, no obligation.\n\nWould you be open to a quick look?\n\nBest,\n[Your name]\n[Your number]`
+    : `Hi,\n\nI found ${b.name} on Google Maps and wanted to reach out.\n\nI build AI chatbots for local ${b.industry}s that handle customer enquiries and capture leads automatically — 24/7, even when you're on a job or closed.\n\nMost ${b.industry}s I work with are ${pain}.\n\nI've built a free demo — happy to show you what it would look like for ${b.name}, no strings attached.\n\nWould you be interested in a quick look?\n\nBest,\n[Your name]\n[Your number]`;
+  document.getElementById('mTitle').textContent = `Outreach Script — ${b.name}`;
   document.getElementById('mSub').textContent = b.address;
   document.getElementById('mTemplate').textContent = script;
   document.getElementById('modal').style.display = 'flex';
@@ -430,7 +390,7 @@ function copyScript() {
 
 async function saveLead() {
   if (!currentBiz) return;
-  await postLead(currentBiz);
+  await postLead(currentBiz, null);
   closeModal();
 }
 
@@ -450,7 +410,7 @@ async function postLead(b, btn) {
       btn.disabled = true;
       setTimeout(() => { btn.textContent = '💾 Save Lead'; btn.disabled = false; }, 2500);
     }
-  } catch(e) { alert('Could not save lead — is the server running?'); }
+  } catch(e) { alert('Could not save — is the server running?'); }
 }
 
 async function loadSaved() {
@@ -463,8 +423,8 @@ async function loadSaved() {
       container.innerHTML = '<div class="empty"><div class="icon">📋</div><h3>No saved leads yet</h3><p>Search for businesses and save the ones you want to pitch</p></div>';
       return;
     }
-    const statuses = ['new', 'contacted', 'interested', 'not interested', 'closed'];
-    container.innerHTML = `<div class="card"><div class="card-title">📊 Pipeline — ${leads.length} lead${leads.length !== 1 ? 's' : ''}</div><div class="leads-list" id="leadsList"></div></div>`;
+    const statuses = ['new','contacted','interested','not interested','closed'];
+    container.innerHTML = `<div class="card"><div class="card-title">📊 Pipeline — ${leads.length} lead${leads.length!==1?'s':''}</div><div class="leads-list" id="leadsList"></div></div>`;
     const list = document.getElementById('leadsList');
     leads.forEach(lead => {
       const item = document.createElement('div');
@@ -473,24 +433,24 @@ async function loadSaved() {
         <div style="flex:1;min-width:140px">
           <div class="lead-name">${lead.name}</div>
           <div class="lead-addr">${lead.address}</div>
-          <div style="margin-top:4px"><span class="score-badge ${lead.leadScore}" style="font-size:0.65rem">${lead.leadScore}</span></div>
+          <span class="score-badge ${lead.leadScore}" style="font-size:0.65rem;margin-top:4px;display:inline-block">${lead.leadScore}</span>
         </div>
         <select class="status-select" onchange="updateLead(${lead.id},'status',this.value)">
-          ${statuses.map(s => `<option value="${s}"${lead.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+          ${statuses.map(s=>`<option value="${s}"${lead.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
         </select>
-        <input class="notes-input" placeholder="Add notes..." value="${lead.notes||''}" onblur="updateLead(${lead.id},'notes',this.value)" />
-        ${lead.website ? `<a class="act-btn act-ghost" href="${lead.website}" target="_blank" style="font-size:0.72rem">🌐</a>` : ''}
-        ${lead.socialLinks?.facebookSearch ? `<a class="social-btn social-fb" href="${lead.socialLinks.facebookSearch}" target="_blank" style="font-size:0.7rem">𝗳</a>` : ''}
+        <input class="notes-input" placeholder="Notes..." value="${lead.notes||''}" onblur="updateLead(${lead.id},'notes',this.value)" />
+        ${lead.website?`<a class="act-btn act-ghost" href="${lead.website}" target="_blank" style="font-size:0.72rem">🌐</a>`:''}
+        ${lead.socialLinks?.facebookSearch?`<a class="social-btn social-fb" href="${lead.socialLinks.facebookSearch}" target="_blank" style="font-size:0.7rem;padding:5px 10px">𝗳 FB</a>`:''}
         <button class="del-btn" onclick="deleteLead(${lead.id})">✕</button>`;
       list.appendChild(item);
     });
   } catch(e) {
-    container.innerHTML = '<div class="error">Could not load saved leads. Make sure the server is running.</div>';
+    container.innerHTML = '<div class="error">Could not load saved leads.</div>';
   }
 }
 
 async function updateLead(id, field, value) {
-  await fetch(`/api/leads/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ [field]: value }) });
+  await fetch(`/api/leads/${id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({[field]:value}) });
   if (field === 'status') loadSaved();
 }
 
@@ -502,11 +462,7 @@ async function deleteLead(id) {
 function exportCSV() {
   if (!searchResults.length) return;
   const rows = [['Name','Address','Phone','Rating','Reviews','Has Website','Website','Facebook Search','Lead Score']];
-  searchResults.forEach(b => rows.push([
-    `"${b.name}"`, `"${b.address}"`, b.phone||'', b.rating, b.reviews,
-    b.hasWebsite?'Yes':'No', b.website||'',
-    b.socialLinks?.facebookSearch||'', b.leadScore
-  ]));
+  searchResults.forEach(b => rows.push([`"${b.name}"`,`"${b.address}"`,b.phone||'',b.rating,b.reviews,b.hasWebsite?'Yes':'No',b.website||'',b.socialLinks?.facebookSearch||'',b.leadScore]));
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));
   a.download = 'leads.csv';
