@@ -13,6 +13,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let savedLeads = [];
 
+// Surrounding areas for major UK cities
+const nearbyAreas = {
+  manchester: ['Manchester', 'Salford', 'Stockport', 'Oldham', 'Bolton', 'Bury'],
+  london: ['London', 'Croydon', 'Bromley', 'Ealing', 'Barnet', 'Hackney'],
+  birmingham: ['Birmingham', 'Wolverhampton', 'Solihull', 'Dudley', 'Walsall', 'Coventry'],
+  leeds: ['Leeds', 'Bradford', 'Wakefield', 'Huddersfield', 'Halifax', 'Harrogate'],
+  liverpool: ['Liverpool', 'Wirral', 'Warrington', 'St Helens', 'Birkenhead', 'Bootle'],
+  sheffield: ['Sheffield', 'Rotherham', 'Doncaster', 'Barnsley', 'Chesterfield'],
+  bristol: ['Bristol', 'Bath', 'Weston-super-Mare', 'Gloucester', 'Cheltenham'],
+  default: (city) => [city]
+};
+
+function getSearchAreas(location) {
+  const key = location.toLowerCase().trim();
+  for (const [city, areas] of Object.entries(nearbyAreas)) {
+    if (city === 'default') continue;
+    if (key.includes(city)) return areas;
+  }
+  return [location]; // single area for unknown cities
+}
+
 // ── Search Route ──────────────────────────────────────────────
 app.get('/api/search', async (req, res) => {
   const { industry, location } = req.query;
@@ -24,21 +45,69 @@ app.get('/api/search', async (req, res) => {
   }
 
   try {
-    const searchRes = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
-      params: { query: `${industry} in ${location}`, key: apiKey }
-    });
+    const areas = getSearchAreas(location);
+    console.log(`Searching ${areas.length} areas for ${industry}:`, areas);
 
-    const data = searchRes.data;
-    if (data.status === 'REQUEST_DENIED') return res.status(403).json({ error: 'API key rejected: ' + (data.error_message || 'Check key and billing') });
-    if (data.status === 'ZERO_RESULTS' || !data.results) return res.json({ results: [] });
+    // Search all areas in parallel
+    const allPlaces = [];
+    const seenIds = new Set();
 
-    // Get details for each place (includes phone, hours etc)
+    await Promise.all(areas.map(async (area) => {
+      try {
+        const searchRes = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
+          params: { query: `${industry} in ${area}`, key: apiKey }
+        });
+
+        if (searchRes.data.results) {
+          for (const place of searchRes.data.results) {
+            if (!seenIds.has(place.place_id)) {
+              seenIds.add(place.place_id);
+              allPlaces.push(place);
+            }
+          }
+        }
+
+        // Get next page if available (up to 2 pages per area)
+        if (searchRes.data.next_page_token) {
+          await new Promise(r => setTimeout(r, 2000)); // Google requires delay
+          const page2 = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
+            params: { pagetoken: searchRes.data.next_page_token, key: apiKey }
+          });
+          if (page2.data.results) {
+            for (const place of page2.data.results) {
+              if (!seenIds.has(place.place_id)) {
+                seenIds.add(place.place_id);
+                allPlaces.push(place);
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.log(`Failed for area ${area}:`, e.message);
+      }
+    }));
+
+    if (allPlaces.length === 0) return res.json({ results: [] });
+
+    // Get details for each place
     const detailed = await Promise.all(
-      data.results.slice(0, 15).map(p => fetchDetails(p, industry, apiKey))
+      allPlaces.slice(0, 60).map(p => fetchDetails(p, industry, apiKey))
     );
 
-    detailed.sort((a, b) => ({ hot: 0, warm: 1, cold: 2 }[a.leadScore] - { hot: 0, warm: 1, cold: 2 }[b.leadScore]));
-    res.json({ results: detailed });
+    // Sort: hot first, then warm, then cold. Within same score, no-website first
+    detailed.sort((a, b) => {
+      const scoreOrder = { hot: 0, warm: 1, cold: 2 };
+      if (scoreOrder[a.leadScore] !== scoreOrder[b.leadScore]) {
+        return scoreOrder[a.leadScore] - scoreOrder[b.leadScore];
+      }
+      // Both same score — no website comes first
+      if (!a.hasWebsite && b.hasWebsite) return -1;
+      if (a.hasWebsite && !b.hasWebsite) return 1;
+      // Then higher reviews
+      return (b.reviews || 0) - (a.reviews || 0);
+    });
+
+    res.json({ results: detailed, areasSearched: areas });
 
   } catch (err) {
     res.status(500).json({ error: 'Search failed: ' + err.message });
@@ -55,19 +124,39 @@ async function fetchDetails(place, industry, apiKey) {
       }
     });
     const d = r.data.result || {};
-    const social = buildSocialLinks(place.name);
-    return scorePlace({ ...place, website: d.website || place.website, formatted_phone_number: d.formatted_phone_number, googleMapsUrl: d.url }, industry, social);
+    const website = d.website || place.website || null;
+    const social = buildSocialLinks(place.name, website);
+    return scorePlace({
+      ...place,
+      website,
+      formatted_phone_number: d.formatted_phone_number,
+      googleMapsUrl: d.url
+    }, industry, social);
   } catch {
-    return scorePlace(place, industry, buildSocialLinks(place.name));
+    return scorePlace(place, industry, buildSocialLinks(place.name, null));
   }
 }
 
-function buildSocialLinks(name) {
+function buildSocialLinks(name, website) {
+  // Clean name for URL slug guessing
   const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const slugDash = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+
+  // Extract domain from website if available
+  let domain = null;
+  if (website) {
+    try { domain = new URL(website).hostname.replace('www.', ''); } catch {}
+  }
+
   return {
+    // Facebook search is the most reliable — searches for their business page by name
     facebookSearch: `https://www.facebook.com/search/pages/?q=${encodeURIComponent(name)}`,
+    // Instagram search via Google (most reliable way)
+    instagramSearch: `https://www.google.com/search?q=${encodeURIComponent(name + ' instagram')}`,
+    // Direct guesses (may or may not exist)
     facebookGuess: `https://www.facebook.com/${slug}`,
-    instagramSearch: `https://www.instagram.com/${slug}`,
+    instagramGuess: `https://www.instagram.com/${slug}`,
+    domain
   };
 }
 
